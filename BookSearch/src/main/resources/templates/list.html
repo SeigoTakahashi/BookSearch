@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="">
+	<meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+	<meta name="generator" content="Hugo 0.83.1">
+	<title>書籍管理アプリ</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+	<meta name="theme-color" content="#7952b3">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+		crossorigin="anonymous"></script>
+	<script th:inline="javascript">
+		/*<![CDATA[*/
+		const lists = /*[[${lists}]]*/[];
+		/*]]>*/
+	</script>
+	<style>
+		.card-body {
+			position: relative;
+		}
+
+		.delete-btn {
+			position: absolute;
+			bottom: 0;
+			right: 0;
+			background: transparent;
+			border: none;
+			font-size: 1.5em;
+			cursor: pointer;
+		}
+	</style>
+</head>
+
+<body>
+	<nav class="navbar navbar-expand-lg bg-body-tertiary">
+		<div class="container-fluid">
+			<a class="navbar-brand" href="/">書籍管理アプリ</a>
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+				aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+				<div class="navbar-nav">
+					<a class="nav-link" href="/">書籍検索</a>
+					<a class="nav-link" th:href="@{/list}">保存</a>
+					<a class="nav-link" th:href="@{/favorite}">お気に入り</a>
+				</div>
+			</div>
+		</div>
+	</nav>
+	<main>
+		<h2 class="py-3 text-center">保存</h2>
+		<div id="bookItem" class="album py-5 bg-light">
+			<th:block th:each="list:${lists}">
+				<div class="container">
+					<div class="col">
+						<div class="card shadow-sm" id="book-info">
+							<div class="card-body border">
+                                <img th:src="${list.src}"><br>
+                                <a th:href="${list.link}" class="card-text" target="_blank" th:text="${list.title}"></a><br>
+                                <th:block th:if="${list.favorite}">
+									<button type="button" class="my-3 btn btn-success" th:onclick="|favorite('__${list.id}__')|" th:id="${list.id}">お気に入り済</button>
+								</th:block>
+								<th:block th:if="${!list.favorite}">
+									<button type="button" class="my-3 btn btn-danger" th:onclick="|favorite('__${list.id}__')|" th:id="${list.id}">お気に入り登録</button>
+								</th:block>
+                            	<button type="button" class="delete-btn" aria-label="Close" th:onclick="|removeBook('__${list.id}__')|">&times;</button>
+                            </div>
+						</div>
+					</div>
+				</div>
+			</th:block>
+		</div>
+		<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+			aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-body">
+						<div class="mb-3">
+							<p>書籍を保存から削除しました。</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</main>
+	<script src="/js/list.js"></script>
+</body>
+
+</html>
